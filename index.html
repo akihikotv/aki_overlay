@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,28 +24,29 @@
 
   <script>
     const urls = [
-      { url: "https://tikfinity.zerody.one/widget/topliker?cid=490343", duration: 180000 },
-      { url: "https://tikfinity.zerody.one/widget/songrequests?cid=490343", duration: 120000 },
-      { url: "https://tikfinity.zerody.one/widget/topgifter?cid=490343", duration: 120000 },
-      { url: "https://tikfinity.zerody.one/widget/gifts?cid=490343", duration: 120000 }
+      { url: "https://tikfinity.zerody.one/widget/goal?cid=490343&metric=likes", duration: 180000 },      // Likes Goal
+      { url: "https://tikfinity.zerody.one/widget/topliker?cid=490343", duration: 180000 },               // Top Liker
+      { url: "https://tikfinity.zerody.one/widget/songrequests?cid=490343", duration: 120000 },           // Song Requests
+      { url: "https://tikfinity.zerody.one/widget/topgifter?cid=490343", duration: 120000 },              // Top Gifters
+      { url: "https://tikfinity.zerody.one/widget/gifts?cid=490343", duration: 120000 }                   // Gift Feed
     ];
 
     let index = 0;
     const frame = document.getElementById("rotatingFrame");
 
     function rotateOverlay() {
-      frame.style.opacity = 0; // start fade out
+      frame.style.opacity = 0; // fade out
       setTimeout(() => {
         frame.src = urls[index].url;
         frame.onload = () => {
-          frame.style.opacity = 1; // fade in after load
+          frame.style.opacity = 1; // fade in
         };
         index = (index + 1) % urls.length;
         setTimeout(rotateOverlay, urls[index].duration); // schedule next
-      }, 1000); // wait for fade out before switching
+      }, 1000); // delay before switching
     }
 
-    // Start the slideshow
+    // Start slideshow
     frame.src = urls[index].url;
     frame.onload = () => {
       frame.style.opacity = 1;
