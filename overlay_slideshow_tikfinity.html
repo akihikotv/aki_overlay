@@ -1,12 +1,15 @@
+# Creamos una nueva versión del archivo con animación fade in/out entre los overlays
 
+animated_html = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Overlay Slideshow</title>
+  <title>Overlay Slideshow with Fade</title>
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       overflow: hidden;
       background: transparent;
     }
@@ -14,6 +17,8 @@
       width: 100vw;
       height: 100vh;
       border: none;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
     }
   </style>
 </head>
@@ -22,22 +27,42 @@
 
   <script>
     const urls = [
-      {{ url: "https://tikfinity.zerody.one/widget/topliker?cid=490343", duration: 180000 }},
-      {{ url: "https://tikfinity.zerody.one/widget/songrequests?cid=490343", duration: 120000 }},
-      {{ url: "https://tikfinity.zerody.one/widget/topgifter?cid=490343", duration: 120000 }},
-      {{ url: "https://tikfinity.zerody.one/widget/gifts?cid=490343", duration: 120000 }}
+      { url: "https://tikfinity.zerody.one/widget/topliker?cid=490343", duration: 180000 },
+      { url: "https://tikfinity.zerody.one/widget/songrequests?cid=490343", duration: 120000 },
+      { url: "https://tikfinity.zerody.one/widget/topgifter?cid=490343", duration: 120000 },
+      { url: "https://tikfinity.zerody.one/widget/gifts?cid=490343", duration: 120000 }
     ];
 
     let index = 0;
     const frame = document.getElementById("rotatingFrame");
 
     function rotateOverlay() {
-      frame.src = urls[index].url;
-      setTimeout(rotateOverlay, urls[index].duration);
-      index = (index + 1) % urls.length;
+      frame.style.opacity = 0; // start fade out
+      setTimeout(() => {
+        frame.src = urls[index].url;
+        frame.onload = () => {
+          frame.style.opacity = 1; // fade in after load
+        };
+        index = (index + 1) % urls.length;
+        setTimeout(rotateOverlay, urls[index].duration); // schedule next
+      }, 1000); // wait for fade out before switching
     }
 
-    rotateOverlay(); // start rotation
+    // Start the slideshow
+    frame.src = urls[index].url;
+    frame.onload = () => {
+      frame.style.opacity = 1;
+      setTimeout(rotateOverlay, urls[index].duration);
+      index = (index + 1) % urls.length;
+    };
   </script>
 </body>
 </html>
+"""
+
+# Guardamos el nuevo archivo HTML
+animated_file_path = "/mnt/data/overlay_slideshow_fade.html"
+with open(animated_file_path, "w", encoding="utf-8") as f:
+    f.write(animated_html)
+
+animated_file_path
