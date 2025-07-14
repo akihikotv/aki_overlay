@@ -24,11 +24,11 @@
 
   <script>
     const urls = [
-      { url: "https://tikfinity.zerody.one/widget/goal?cid=490343&metric=likes", duration: 180000 },      // Likes Goal
-      { url: "https://tikfinity.zerody.one/widget/topliker?cid=490343", duration: 180000 },               // Top Liker
-      { url: "https://tikfinity.zerody.one/widget/songrequests?cid=490343", duration: 120000 },           // Song Requests
-      { url: "https://tikfinity.zerody.one/widget/topgifter?cid=490343", duration: 120000 },              // Top Gifters
-      { url: "https://tikfinity.zerody.one/widget/gifts?cid=490343", duration: 120000 }                   // Gift Feed
+      { url: "https://tikfinity.zerody.one/widget/goal?cid=490343&metric=likes", duration: 30000 },
+      { url: "https://tikfinity.zerody.one/widget/topliker?cid=490343", duration: 30000 },
+      { url: "https://tikfinity.zerody.one/widget/songrequests?cid=490343", duration: 30000 },
+      { url: "https://tikfinity.zerody.one/widget/topgifter?cid=490343", duration: 30000 },
+      { url: "https://tikfinity.zerody.one/widget/gifts?cid=490343", duration: 30000 }
     ];
 
     let index = 0;
@@ -43,16 +43,4 @@
         };
         index = (index + 1) % urls.length;
         setTimeout(rotateOverlay, urls[index].duration); // schedule next
-      }, 1000); // delay before switching
-    }
-
-    // Start slideshow
-    frame.src = urls[index].url;
-    frame.onload = () => {
-      frame.style.opacity = 1;
-      setTimeout(rotateOverlay, urls[index].duration);
-      index = (index + 1) % urls.length;
-    };
-  </script>
-</body>
-</html>
+      }, 1000);
