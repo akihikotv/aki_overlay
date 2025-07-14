@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Overlay Slideshow</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: transparent;
+    }
+    iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="rotatingFrame" src=""></iframe>
+
+  <script>
+    const urls = [
+      {{ url: "https://tikfinity.zerody.one/widget/topliker?cid=490343", duration: 180000 }},
+      {{ url: "https://tikfinity.zerody.one/widget/songrequests?cid=490343", duration: 120000 }},
+      {{ url: "https://tikfinity.zerody.one/widget/topgifter?cid=490343", duration: 120000 }},
+      {{ url: "https://tikfinity.zerody.one/widget/gifts?cid=490343", duration: 120000 }}
+    ];
+
+    let index = 0;
+    const frame = document.getElementById("rotatingFrame");
+
+    function rotateOverlay() {
+      frame.src = urls[index].url;
+      setTimeout(rotateOverlay, urls[index].duration);
+      index = (index + 1) % urls.length;
+    }
+
+    rotateOverlay(); // start rotation
+  </script>
+</body>
+</html>
