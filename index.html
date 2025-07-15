@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Overlay Slideshow with Fade</title>
+  <title>Overlay Slideshow with Fade + Indicator</title>
   <style>
     html, body {
       margin: 0;
@@ -17,10 +17,30 @@
       opacity: 0;
       transition: opacity 1s ease-in-out;
     }
+    .indicator {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 1000;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.3);
+      transition: background-color 0.3s ease;
+    }
+    .dot.active {
+      background-color: #ffffff;
+    }
   </style>
 </head>
 <body>
   <iframe id="rotatingFrame" src=""></iframe>
+  <div class="indicator" id="indicatorContainer"></div>
 
   <script>
     const urls = [
@@ -29,11 +49,27 @@
       { url: "https://tikfinity.zerody.one/widget/topgifter?cid=490343", duration: 15000 },
       { url: "https://tikfinity.zerody.one/widget/goal?cid=490343&metric=coins", duration: 15000 },
       { url: "https://tikfinity.zerody.one/widget/gifts?cid=490343", duration: 15000 }
-      
     ];
 
     let index = 0;
     const frame = document.getElementById("rotatingFrame");
+    const indicator = document.getElementById("indicatorContainer");
+
+    // Crear los indicadores
+    urls.forEach((_, i) => {
+      const dot = document.createElement("div");
+      dot.classList.add("dot");
+      if (i === 0) dot.classList.add("active");
+      indicator.appendChild(dot);
+    });
+
+    const dots = document.querySelectorAll(".dot");
+
+    function updateIndicator(idx) {
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("active", i === idx);
+      });
+    }
 
     function rotateOverlay() {
       frame.style.opacity = 0;
@@ -42,6 +78,7 @@
         frame.onload = () => {
           frame.style.opacity = 1;
         };
+        updateIndicator(index);
         index = (index + 1) % urls.length;
         setTimeout(rotateOverlay, urls[index].duration);
       }, 1000);
@@ -50,6 +87,7 @@
     frame.src = urls[index].url;
     frame.onload = () => {
       frame.style.opacity = 1;
+      updateIndicator(index);
       setTimeout(rotateOverlay, urls[index].duration);
       index = (index + 1) % urls.length;
     };
