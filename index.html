@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Overlay Slideshow with Titles</title>
+  <title>Overlay Slideshow with Top Label</title>
   <style>
     html, body {
       margin: 0;
@@ -17,6 +17,23 @@
       opacity: 0;
       transition: opacity 1s ease-in-out;
     }
+
+    /* Texto arriba */
+    .top-label {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      padding: 6px 16px;
+      border-radius: 10px;
+      display: none;
+      z-index: 1000;
+    }
+
     .indicator {
       position: absolute;
       bottom: 20px;
@@ -27,6 +44,7 @@
       z-index: 1000;
       font-family: Arial, sans-serif;
     }
+
     .label {
       padding: 5px 10px;
       border-radius: 8px;
@@ -35,6 +53,7 @@
       font-size: 12px;
       transition: background-color 0.3s ease, color 0.3s ease;
     }
+
     .label.active {
       background-color: #ffffff;
       color: #000000;
@@ -44,6 +63,7 @@
 </head>
 <body>
   <iframe id="rotatingFrame" src=""></iframe>
+  <div class="top-label" id="topText"></div>
   <div class="indicator" id="indicatorContainer"></div>
 
   <script>
@@ -58,47 +78,17 @@
       { name: "Last Subscriber", url: "https://tikfinity.zerody.one/widget/lastx?cid=490343&x=subscriber", duration: 15000 }
     ];
 
+    const labels = {
+      follower: "Últimos Seguidores",
+      gifter: "Últimos Donadores",
+      subscriber: "Últimos Suscriptores"
+    };
+
     let index = 0;
     const frame = document.getElementById("rotatingFrame");
     const indicator = document.getElementById("indicatorContainer");
+    const topText = document.getElementById("topText");
 
-    // Crear etiquetas
+    // Crear las etiquetas abajo
     urls.forEach((entry, i) => {
       const label = document.createElement("div");
-      label.classList.add("label");
-      label.innerText = entry.name;
-      if (i === 0) label.classList.add("active");
-      indicator.appendChild(label);
-    });
-
-    const labels = document.querySelectorAll(".label");
-
-    function updateIndicator(idx) {
-      labels.forEach((label, i) => {
-        label.classList.toggle("active", i === idx);
-      });
-    }
-
-    function rotateOverlay() {
-      frame.style.opacity = 0;
-      setTimeout(() => {
-        frame.src = urls[index].url;
-        frame.onload = () => {
-          frame.style.opacity = 1;
-        };
-        updateIndicator(index);
-        index = (index + 1) % urls.length;
-        setTimeout(rotateOverlay, urls[index].duration);
-      }, 1000);
-    }
-
-    frame.src = urls[index].url;
-    frame.onload = () => {
-      frame.style.opacity = 1;
-      updateIndicator(index);
-      setTimeout(rotateOverlay, urls[index].duration);
-      index = (index + 1) % urls.length;
-    };
-  </script>
-</body>
-</html>
