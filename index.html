@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Overlay Slideshow with Fade + Indicator</title>
+  <title>Overlay Slideshow with Titles</title>
   <style>
     html, body {
       margin: 0;
@@ -23,18 +23,22 @@
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 10px;
+      gap: 12px;
       z-index: 1000;
+      font-family: Arial, sans-serif;
     }
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background-color: rgba(255, 255, 255, 0.3);
-      transition: background-color 0.3s ease;
+    .label {
+      padding: 5px 10px;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 12px;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
-    .dot.active {
+    .label.active {
       background-color: #ffffff;
+      color: #000000;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -44,33 +48,34 @@
 
   <script>
     const urls = [
-      { url: "https://tikfinity.zerody.one/widget/topliker?cid=490343", duration: 15000 },
-      { url: "https://tikfinity.zerody.one/widget/songrequests?cid=490343", duration: 15000 },
-      { url: "https://tikfinity.zerody.one/widget/topgifter?cid=490343", duration: 15000 },
-      { url: "https://tikfinity.zerody.one/widget/goal?cid=490343&metric=coins", duration: 15000 },
-      { url: "https://tikfinity.zerody.one/widget/gifts?cid=490343", duration: 15000 },
-      { url: "https://tikfinity.zerody.one/widget/lastx?cid=490343&x=follower", duration: 15000 },
-      { url: "https://tikfinity.zerody.one/widget/lastx?cid=490343&x=gifter", duration: 15000 },
-      { url: "https://tikfinity.zerody.one/widget/lastx?cid=490343&x=subscriber", duration: 15000 }
+      { name: "Top Liker", url: "https://tikfinity.zerody.one/widget/topliker?cid=490343", duration: 15000 },
+      { name: "Song Requests", url: "https://tikfinity.zerody.one/widget/songrequests?cid=490343", duration: 15000 },
+      { name: "Top Gifters", url: "https://tikfinity.zerody.one/widget/topgifter?cid=490343", duration: 15000 },
+      { name: "Coins Goal", url: "https://tikfinity.zerody.one/widget/goal?cid=490343&metric=coins", duration: 15000 },
+      { name: "Gift Feed", url: "https://tikfinity.zerody.one/widget/gifts?cid=490343", duration: 15000 },
+      { name: "Last Follower", url: "https://tikfinity.zerody.one/widget/lastx?cid=490343&x=follower", duration: 15000 },
+      { name: "Last Gifter", url: "https://tikfinity.zerody.one/widget/lastx?cid=490343&x=gifter", duration: 15000 },
+      { name: "Last Subscriber", url: "https://tikfinity.zerody.one/widget/lastx?cid=490343&x=subscriber", duration: 15000 }
     ];
 
     let index = 0;
     const frame = document.getElementById("rotatingFrame");
     const indicator = document.getElementById("indicatorContainer");
 
-    // Crear los indicadores
-    urls.forEach((_, i) => {
-      const dot = document.createElement("div");
-      dot.classList.add("dot");
-      if (i === 0) dot.classList.add("active");
-      indicator.appendChild(dot);
+    // Crear etiquetas
+    urls.forEach((entry, i) => {
+      const label = document.createElement("div");
+      label.classList.add("label");
+      label.innerText = entry.name;
+      if (i === 0) label.classList.add("active");
+      indicator.appendChild(label);
     });
 
-    const dots = document.querySelectorAll(".dot");
+    const labels = document.querySelectorAll(".label");
 
     function updateIndicator(idx) {
-      dots.forEach((dot, i) => {
-        dot.classList.toggle("active", i === idx);
+      labels.forEach((label, i) => {
+        label.classList.toggle("active", i === idx);
       });
     }
 
