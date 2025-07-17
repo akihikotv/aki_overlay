@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Overlay Slideshow with Top Label</title>
+  <title>Overlay Slideshow with Top Labels and Buttons</title>
   <style>
     html, body {
       margin: 0;
@@ -18,35 +18,35 @@
       transition: opacity 1s ease-in-out;
     }
 
-    /* Texto arriba */
-    .top-label {
+    .top-wrapper {
       position: absolute;
       top: 20px;
       left: 50%;
       transform: translateX(-50%);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      font-family: Arial, sans-serif;
+    }
+
+    .top-label {
       background-color: rgba(0, 0, 0, 0.5);
       color: white;
-      font-family: Arial, sans-serif;
       font-size: 18px;
       padding: 6px 16px;
       border-radius: 10px;
       display: none;
-      z-index: 1000;
     }
 
     .indicator {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
       display: flex;
-      gap: 12px;
-      z-index: 1000;
-      font-family: Arial, sans-serif;
+      gap: 10px;
     }
 
     .label {
-      padding: 5px 10px;
+      padding: 4px 10px;
       border-radius: 8px;
       background-color: rgba(255, 255, 255, 0.2);
       color: white;
@@ -63,8 +63,11 @@
 </head>
 <body>
   <iframe id="rotatingFrame" src=""></iframe>
-  <div class="top-label" id="topText"></div>
-  <div class="indicator" id="indicatorContainer"></div>
+
+  <div class="top-wrapper">
+    <div class="top-label" id="topText"></div>
+    <div class="indicator" id="indicatorContainer"></div>
+  </div>
 
   <script>
     const urls = [
@@ -89,6 +92,58 @@
     const indicator = document.getElementById("indicatorContainer");
     const topText = document.getElementById("topText");
 
-    // Crear las etiquetas abajo
+    // Crear las etiquetas arriba
     urls.forEach((entry, i) => {
       const label = document.createElement("div");
+      label.classList.add("label");
+      label.innerText = entry.name;
+      if (i === 0) label.classList.add("active");
+      indicator.appendChild(label);
+    });
+
+    const labelElements = document.querySelectorAll(".label");
+
+    function updateIndicator(idx) {
+      labelElements.forEach((el, i) => {
+        el.classList.toggle("active", i === idx);
+      });
+    }
+
+    function updateTopLabel(url) {
+      const match = url.match(/x=(follower|gifter|subscriber)/);
+      if (match) {
+        topText.innerText = labels[match[1]];
+        topText.style.display = "block";
+      } else {
+        topText.style.display = "none";
+      }
+    }
+
+    function rotateOverlay() {
+      frame.style.opacity = 0;
+      setTimeout(() => {
+        const current = urls[index];
+        frame.src = current.url;
+        updateTopLabel(current.url);
+        frame.onload = () => {
+          frame.style.opacity = 1;
+        };
+        updateIndicator(index);
+        index = (index + 1) % urls.length;
+        setTimeout(rotateOverlay, current.duration);
+      }, 1000);
+    }
+
+    // Inicial
+    const current = urls[index];
+    frame.src = current.url;
+    updateTopLabel(current.url);
+    frame.onload = () => {
+      frame.style.opacity = 1;
+      updateIndicator(index);
+      setTimeout(rotateOverlay, current.duration);
+      index = (index + 1) % urls.length;
+    };
+  </script>
+</body>
+</html>
