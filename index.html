@@ -10,6 +10,7 @@
       overflow: hidden;
       background: transparent;
     }
+
     iframe {
       width: 100vw;
       height: 100vh;
@@ -23,28 +24,24 @@
       top: 10px;
       left: 50%;
       transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       z-index: 1000;
       font-family: Arial, sans-serif;
-      color: white;
-      text-align: center;
-    }
-
-    .title-label {
-      font-size: 20px;
-      margin-bottom: 10px;
       font-weight: bold;
-      background: rgba(0,0,0,0.5);
+      font-size: 20px;
+      color: white;
+      background: rgba(0, 0, 0, 0.6);
       padding: 6px 12px;
       border-radius: 8px;
     }
 
     .indicator {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
       gap: 10px;
-      justify-content: center;
+      z-index: 1000;
     }
 
     .dot {
@@ -62,11 +59,8 @@
 </head>
 <body>
   <iframe id="rotatingFrame" src=""></iframe>
-
-  <div class="header">
-    <div class="title-label" id="pageTitle">Loading...</div>
-    <div class="indicator" id="indicatorContainer"></div>
-  </div>
+  <div class="header" id="pageTitle">Loading...</div>
+  <div class="indicator" id="indicatorContainer"></div>
 
   <script>
     const urls = [
@@ -77,8 +71,7 @@
       { url: "https://tikfinity.zerody.one/widget/gifts?cid=490343", duration: 15000, label: "Gift Feed" },
       { url: "https://tikfinity.zerody.one/widget/lastx?cid=490343&x=follower", duration: 15000, label: "Last Follower" },
       { url: "https://tikfinity.zerody.one/widget/lastx?cid=490343&x=gifter", duration: 15000, label: "Last Gifter" },
-      { url: "https://tikfinity.zerody.one/widget/lastx?cid=490343&x=subscriber", duration: 15000, label: "Last Subscriber" },
-      { url: "https://6klabs.com/widget/spotify/a9e0da1bac7b2ebb245a3a1157c541cd812ab718f304429828649076dfeb4a15", duration: 60000, label: "Now Playing on Spotify" }
+      { url: "https://tikfinity.zerody.one/widget/lastx?cid=490343&x=subscriber", duration: 15000, label: "Last Subscriber" }
     ];
 
     let index = 0;
@@ -86,7 +79,7 @@
     const indicator = document.getElementById("indicatorContainer");
     const title = document.getElementById("pageTitle");
 
-    // Crear indicadores
+    // Crear puntos del indicador
     urls.forEach((_, i) => {
       const dot = document.createElement("div");
       dot.classList.add("dot");
@@ -96,7 +89,7 @@
 
     const dots = document.querySelectorAll(".dot");
 
-    function updateIndicator(idx) {
+    function updateUI(idx) {
       dots.forEach((dot, i) => {
         dot.classList.toggle("active", i === idx);
       });
@@ -110,7 +103,7 @@
         frame.onload = () => {
           frame.style.opacity = 1;
         };
-        updateIndicator(index);
+        updateUI(index);
         setTimeout(rotateOverlay, urls[index].duration);
         index = (index + 1) % urls.length;
       }, 1000);
@@ -119,7 +112,7 @@
     frame.src = urls[index].url;
     frame.onload = () => {
       frame.style.opacity = 1;
-      updateIndicator(index);
+      updateUI(index);
       setTimeout(rotateOverlay, urls[index].duration);
       index = (index + 1) % urls.length;
     };
